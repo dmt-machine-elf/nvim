@@ -17,13 +17,37 @@ vim.opt.rtp:prepend(lazypath)
 require("lazy").setup({
     spec = {
         { "LazyVim/LazyVim", import = "lazyvim.plugins" }, -- standard LazyVim setup
+        { import = "lazyvim.plugins.extras.linting.eslint" },
+        { import = "lazyvim.plugins.extras.formatting.prettier" },
+        {
+            "neovim/nvim-lspconfig",
+            opts = {
+                servers = {
+                    tsserver = {
+                        settings = {
+                            completions = { completeFunctionCalls = true },
+                            implicitProjectConfiguration = {
+                                checkJs = true,
+                            },
+                        },
+                    },
+                    eslint = {
+                        settings = {
+                            format = true,
+                            run = "onSave",
+                            workingDirectory = { mode = "auto" },
+                        },
+                    },
+                },
+            },
+        },
         { import = "plugins" }, -- custom plugin overrides
     },
     defaults = {
         lazy = false, -- load custom plugins on startup
         version = false, -- use latest commit of plugins
     },
-    install = { colorscheme = { "githum-nvim-theme" } }, -- colorschemes
+    install = { colorscheme = { "tokyonight-night" } }, -- colorschemes
     checker = { enabled = true, notify = false }, -- auto plugin updates
     performance = {
         rtp = {
@@ -35,4 +59,12 @@ require("lazy").setup({
             },
         },
     },
+})
+
+vim.o.background = "dark"
+vim.api.nvim_create_autocmd("VimEnter", {
+    callback = function()
+        vim.cmd("set background=dark")
+        vim.cmd("colorscheme tokyonight-night") -- Or your preferred dark theme
+    end,
 })
